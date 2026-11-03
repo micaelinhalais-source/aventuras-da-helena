@@ -9,7 +9,7 @@ export interface World {
 }
 
 export const WORLDS: World[] = [
-  { id: "numeros", name: "Números", emoji: "🔢", color: "#FFB547", available: false },
+  { id: "numeros", name: "Números", emoji: "🔢", color: "#FFB547", available: true },
   { id: "formas", name: "Formas", emoji: "🔺", color: "#FF7EB6", available: false },
   { id: "logica", name: "Lógica", emoji: "🧩", color: "#3BCE76", available: false },
   { id: "desafios", name: "Desafios", emoji: "⚖️", color: "#4D9BFA", available: false },
@@ -27,5 +27,9 @@ export function loadProgress(): Progress {
   }
 }
 export function saveProgress(p: Progress) {
-  window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  try {
+    window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {
+    /* The game remains playable when storage is unavailable. */
+  }
 }
