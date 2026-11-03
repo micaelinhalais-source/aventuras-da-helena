@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture
+- Game is a single route (`/`) with a screen state machine; character model/options live in `src/game/character.ts`, worlds registry in `src/game/worlds.ts` — add new worlds there so the saved character is reused everywhere.
+- Character and progress use separate localStorage keys so editing the avatar never resets progress.
+- Offline: vite-plugin-pwa generateSW (`/sw.js`), registered only via `src/lib/pwa.ts` guards (never in dev/preview).

@@ -11,7 +11,7 @@ function refused(): boolean {
   const previewLabel = /^(?:id-preview|preview)(?:-[a-z0-9]+)?--.+$/;
   for (const d of [".lovable.app", ".gpt-eng.com", ".gptengineer.run"]) {
     if (h.endsWith(d)) {
-      const label = h.slice(0, -d.length).split(".")[0];
+      const label = h.slice(0, -d.length).split(".")[0] ?? "";
       if (previewLabel.test(label)) return true;
       if (label === "project--c2e560e9-786d-4189-bd29-1c86c73595a8-dev") return true;
     }
