@@ -53,7 +53,7 @@ function Game() {
           <h1 className="animate-pop text-game-shadow text-6xl font-bold text-card md:text-7xl">As Aventuras da Helena</h1>
           <div className="panel animate-pop flex max-w-2xl items-center gap-4 p-6 text-left [animation-delay:150ms]">
             <p className="text-2xl font-medium leading-snug md:text-3xl">
-              Olá, pequeno aventureiro! 👋 Que bom ter você aqui! Vamos criar seu personagem?
+              Olá, pequeno aventureiro!{"\n"}Você está pronto pra mais uma aventura?Vamos criar seu personagem?
             </p>
             <SpeakButton text={MSG_WELCOME} />
           </div>
@@ -64,7 +64,7 @@ function Game() {
               setScreen("creator");
             }}
           >
-            <Sparkles className="size-9" strokeWidth={3} /> CRIAR MEU PERSONAGEM
+            <Sparkles className="size-9" strokeWidth={3} />CRIAR PERSONAGEM
           </button>
         </section>
       )}
