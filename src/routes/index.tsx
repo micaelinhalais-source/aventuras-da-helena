@@ -4,8 +4,10 @@ import { Volume2, Pencil, Lock, Sparkles } from "lucide-react";
 import { Avatar } from "@/components/game/Avatar";
 import { Creator } from "@/components/game/Creator";
 import { Scenery } from "@/components/game/Scenery";
+import { NumbersActivity } from "@/components/game/NumbersActivity";
+import { Button } from "@/components/ui/button";
 import { DEFAULT_BOY, loadCharacter, saveCharacter, type Character } from "@/game/character";
-import { WORLDS } from "@/game/worlds";
+import { WORLDS, loadProgress, saveProgress, type Progress } from "@/game/worlds";
 import { sfx, speak } from "@/game/sound";
 import helenaIcon from "@/assets/helena-icon.png.asset.json";
 
@@ -16,12 +18,14 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Crie seu personagem e comece uma aventura de números, formas, lógica e memória." },
       { property: "og:title", content: "As Aventuras da Helena" },
       { property: "og:description", content: "Jogo educativo para crianças de 5 anos, feito para o iPad." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Game,
 });
 
-type Screen = "loading" | "welcome" | "creator" | "done" | "hub";
+type Screen = "loading" | "welcome" | "creator" | "done" | "hub" | "numbers";
 
 const MSG_WELCOME = "Olá, pequeno aventureiro! Que bom ter você aqui! Antes de começarmos nossa aventura, vamos criar seu personagem?";
 const MSG_DONE = "Uau! Você ficou incrível! Nossa aventura está prestes a começar!";
@@ -37,10 +41,12 @@ function SpeakButton({ text }: { text: string }) {
 function Game() {
   const [screen, setScreen] = useState<Screen>("loading");
   const [character, setCharacter] = useState<Character | null>(null);
+  const [progress, setProgress] = useState<Progress>({});
 
   useEffect(() => {
     const saved = loadCharacter();
     setCharacter(saved);
+    setProgress(loadProgress());
     setScreen(saved ? "hub" : "welcome");
   }, []);
 
@@ -128,26 +134,36 @@ function Game() {
           </div>
           <div className="grid w-full max-w-xl grid-cols-2 gap-5 sm:grid-cols-3">
             {WORLDS.map((w, i) => (
-              <button
+              <Button
                 key={w.id}
+                aria-label={`Mundo ${w.name}`}
                 onClick={() => {
                   sfx.tab();
-                  speak(`Mundo ${w.name}. Em breve!`);
+                  if (w.id === "numeros" && w.available) setScreen("numbers");
+                  else speak(`Mundo ${w.name}. Em breve!`);
                 }}
-                className="animate-pop relative flex aspect-square flex-col items-center justify-center rounded-[2.5rem] border-4 border-card shadow-[0_10px_0_oklch(0_0_0/0.15)] active:translate-y-1"
+                className="animate-pop relative flex h-auto aspect-square flex-col items-center justify-center rounded-[2.5rem] border-4 border-card shadow-[0_10px_0_oklch(0_0_0/0.15)] active:translate-y-1"
                 style={{ background: `radial-gradient(circle at 35% 25%, #ffffff88, transparent 50%), ${w.color}`, animationDelay: `${i * 80}ms` }}
               >
                 <span className="text-6xl">{w.emoji}</span>
                 <span className="mt-2 text-xl font-bold text-card [text-shadow:0_2px_0_oklch(0_0_0/0.25)]">{w.name}</span>
+                {w.id === "numeros" && (progress.numeros?.stars ?? 0) > 0 && <span className="absolute right-2 top-2 rounded-full bg-card p-2" aria-label="Estrela conquistada">⭐</span>}
                 {!w.available && (
                   <span className="absolute right-2 top-2 rounded-full bg-card p-2 text-muted-foreground">
                     <Lock className="size-5" strokeWidth={3} />
                   </span>
                 )}
-              </button>
+              </Button>
             ))}
           </div>
         </section>
+      )}
+      {screen === "numbers" && character && (
+        <NumbersActivity character={character} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={() => {
+          const updated = { ...progress, numeros: { stars: Math.max(1, progress.numeros?.stars ?? 0) } };
+          saveProgress(updated);
+          setProgress(updated);
+        }} />
       )}
     </main>
   );
