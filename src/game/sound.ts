@@ -32,12 +32,28 @@ export const sfx = {
   cheer: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.1, 0.22, "triangle")),
 };
 
+const FEMALE = /luciana|francisca|fernanda|vit[oó]ria|maria|joana|camila|thalita|helena|letícia|leticia|female|feminin|google português/i;
+const MALE = /daniel|felipe|ricardo|antonio|ant[oô]nio|male|masculin/i;
+
+function pickGirlVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith("pt"));
+  const br = voices.filter((v) => v.lang.toLowerCase().includes("br"));
+  const pool = br.length ? br : voices;
+  return pool.find((v) => FEMALE.test(v.name) && !MALE.test(v.name)) ?? pool.find((v) => !MALE.test(v.name)) ?? pool[0] ?? null;
+}
+
+if (typeof window !== "undefined" && "speechSynthesis" in window) {
+  window.speechSynthesis.getVoices();
+}
+
 export function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "pt-BR";
-  u.rate = 0.95;
-  u.pitch = 1.2;
+  const voice = pickGirlVoice();
+  if (voice) u.voice = voice;
+  u.rate = 1.0;
+  u.pitch = 1.6; // higher pitch sounds like a young girl
   window.speechSynthesis.speak(u);
 }
