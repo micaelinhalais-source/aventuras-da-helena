@@ -7,6 +7,7 @@ import { Scenery } from "@/components/game/Scenery";
 import { DEFAULT_BOY, loadCharacter, saveCharacter, type Character } from "@/game/character";
 import { WORLDS } from "@/game/worlds";
 import { sfx, speak } from "@/game/sound";
+import helenaIcon from "@/assets/helena-icon.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,7 +50,11 @@ function Game() {
 
       {screen === "welcome" && (
         <section className="flex min-h-dvh flex-col items-center justify-center gap-8 p-6 text-center">
-          <div className="animate-float text-[7rem] leading-none">⭐</div>
+          <img
+            src={helenaIcon.url}
+            alt="As Aventuras da Helena"
+            className="animate-float w-60 max-w-[70vw] drop-shadow-2xl md:w-72"
+          />
           <h1 className="animate-pop text-game-shadow text-6xl font-bold text-card md:text-7xl">As Aventuras da Helena</h1>
           <div className="panel animate-pop flex max-w-2xl items-center gap-4 p-6 text-left [animation-delay:150ms]">
             <p className="text-2xl font-medium leading-snug md:text-3xl">
