@@ -36,10 +36,10 @@ export const ACCESSORIES: Accessory[] = ["cap", "bow", "glasses", "crown", "head
 
 export const DEFAULT_BOY: Character = {
   gender: "boy",
-  skin: SKIN_TONES[1],
-  eyeColor: EYE_COLORS[0],
+  skin: "#F5C6A5",
+  eyeColor: "#5B3A1E",
   eyeShape: "round",
-  hairColor: HAIR_COLORS[1],
+  hairColor: "#5C3A1E",
   hairStyle: "short",
   shirtStyle: "tshirt",
   shirtColor: "#2EC4F1",
@@ -54,7 +54,7 @@ export const DEFAULT_GIRL: Character = {
   ...DEFAULT_BOY,
   gender: "girl",
   hairStyle: "pigtails",
-  hairColor: HAIR_COLORS[2],
+  hairColor: "#A0612B",
   shirtColor: "#FF7EB6",
   bottomStyle: "skirt",
   bottomColor: "#A26BFA",

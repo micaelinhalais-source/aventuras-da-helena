@@ -71,7 +71,7 @@ const CATEGORIES: Category[] = [
 export function Creator({ initial, onDone }: { initial: Character; onDone: (c: Character) => void }) {
   const [c, setC] = useState<Character>(initial);
   const [history, setHistory] = useState<Character[]>([]);
-  const [cat, setCat] = useState(CATEGORIES[0].id);
+  const [cat, setCat] = useState("who");
   const [bump, setBump] = useState(0);
 
   const apply = (next: Character) => {
