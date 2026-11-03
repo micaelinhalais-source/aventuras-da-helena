@@ -62,9 +62,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
-      { title: "Aventura do Saber" },
+      { title: "As Aventuras da Helena" },
       { name: "description", content: "Jogo educativo infantil para iPad." },
-      { property: "og:title", content: "Aventura do Saber" },
+      { property: "og:title", content: "As Aventuras da Helena" },
       { property: "og:description", content: "Jogo educativo infantil para iPad." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,7 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
-      { name: "apple-mobile-web-app-title", content: "Aventura" },
+      { name: "apple-mobile-web-app-title", content: "Helena" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

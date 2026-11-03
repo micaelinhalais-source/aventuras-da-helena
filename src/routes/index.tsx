@@ -11,9 +11,9 @@ import { sfx, speak } from "@/game/sound";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aventura do Saber — Jogo educativo infantil" },
+      { title: "As Aventuras da Helena — Jogo educativo infantil" },
       { name: "description", content: "Crie seu personagem e comece uma aventura de números, formas, lógica e memória." },
-      { property: "og:title", content: "Aventura do Saber" },
+      { property: "og:title", content: "As Aventuras da Helena" },
       { property: "og:description", content: "Jogo educativo para crianças de 5 anos, feito para o iPad." },
     ],
   }),
@@ -50,7 +50,7 @@ function Game() {
       {screen === "welcome" && (
         <section className="flex min-h-dvh flex-col items-center justify-center gap-8 p-6 text-center">
           <div className="animate-float text-[7rem] leading-none">⭐</div>
-          <h1 className="animate-pop text-game-shadow text-6xl font-bold text-card md:text-7xl">Aventura do Saber</h1>
+          <h1 className="animate-pop text-game-shadow text-6xl font-bold text-card md:text-7xl">As Aventuras da Helena</h1>
           <div className="panel animate-pop flex max-w-2xl items-center gap-4 p-6 text-left [animation-delay:150ms]">
             <p className="text-2xl font-medium leading-snug md:text-3xl">
               Olá, pequeno aventureiro! 👋 Que bom ter você aqui! Vamos criar seu personagem?
