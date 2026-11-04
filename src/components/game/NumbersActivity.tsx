@@ -17,7 +17,7 @@ export function NumbersActivity({ character, onBack, onComplete }: {
   const [wrong, setWrong] = useState<number | null>(null);
   const [counted, setCounted] = useState<number[]>([]);
   const [finished, setFinished] = useState(false);
-  const round = rounds[index];
+  const round = rounds[index] ?? { count: 1, emoji: "🍎", noun: "maçãs", options: [1, 2, 3] };
   const prompt = `Quantas ${round.noun} você vê?`;
 
   useEffect(() => {
