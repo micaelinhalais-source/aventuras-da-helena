@@ -10,14 +10,14 @@ export interface World {
 
 export const WORLDS: World[] = [
   { id: "numeros", name: "Números", emoji: "🔢", color: "#FFB547", available: true },
-  { id: "formas", name: "Formas", emoji: "🔺", color: "#FF7EB6", available: false },
+  { id: "formas", name: "Formas", emoji: "🔺", color: "#FF7EB6", available: true },
   { id: "logica", name: "Lógica", emoji: "🧩", color: "#3BCE76", available: false },
   { id: "desafios", name: "Desafios", emoji: "⚖️", color: "#4D9BFA", available: false },
   { id: "memoria", name: "Memória", emoji: "🧠", color: "#A26BFA", available: false },
 ];
 
 const PROGRESS_KEY = "aventura:progress:v1";
-export type Progress = Partial<Record<World["id"], { stars: number }>>;
+export type Progress = Partial<Record<World["id"], { stars: number; completedLevels?: number }>>;
 
 export function loadProgress(): Progress {
   try {
