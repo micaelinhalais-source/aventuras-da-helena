@@ -18,7 +18,11 @@ export function createCountingRounds(random: () => number = Math.random): Counti
     const options = [count, count === 5 ? 3 : count + 1, count <= 2 ? count + 2 : count - 1];
     for (let i = options.length - 1; i > 0; i--) {
       const j = Math.floor(random() * (i + 1));
-      [options[i], options[j]] = [options[j], options[i]];
+      const current = options[i];
+      const other = options[j];
+      if (current === undefined || other === undefined) continue;
+      options[i] = other;
+      options[j] = current;
     }
     return { ...object, count, options };
   });
