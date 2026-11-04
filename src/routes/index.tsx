@@ -5,6 +5,7 @@ import { Avatar } from "@/components/game/Avatar";
 import { Creator } from "@/components/game/Creator";
 import { Scenery } from "@/components/game/Scenery";
 import { NumbersActivity } from "@/components/game/NumbersActivity";
+import { ShapesWorld } from "@/components/game/ShapesWorld";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_BOY, loadCharacter, saveCharacter, type Character } from "@/game/character";
 import { WORLDS, loadProgress, saveProgress, type Progress } from "@/game/worlds";
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/")({
   component: Game,
 });
 
-type Screen = "loading" | "welcome" | "creator" | "done" | "hub" | "numbers";
+type Screen = "loading" | "welcome" | "creator" | "done" | "hub" | "numbers" | "shapes";
 
 const MSG_WELCOME = "Olá, pequeno aventureiro! Que bom ter você aqui! Antes de começarmos nossa aventura, vamos criar seu personagem?";
 const MSG_DONE = "Uau! Você ficou incrível! Nossa aventura está prestes a começar!";
@@ -140,6 +141,7 @@ function Game() {
                 onClick={() => {
                   sfx.tab();
                   if (w.id === "numeros" && w.available) setScreen("numbers");
+                  else if (w.id === "formas" && w.available) setScreen("shapes");
                   else speak(`Mundo ${w.name}. Em breve!`);
                 }}
                 className="animate-pop relative flex h-auto aspect-square flex-col items-center justify-center rounded-[2.5rem] border-4 border-card shadow-[0_10px_0_oklch(0_0_0/0.15)] active:translate-y-1"
@@ -148,6 +150,7 @@ function Game() {
                 <span className="text-6xl">{w.emoji}</span>
                 <span className="mt-2 text-xl font-bold text-card [text-shadow:0_2px_0_oklch(0_0_0/0.25)]">{w.name}</span>
                 {w.id === "numeros" && (progress.numeros?.stars ?? 0) > 0 && <span className="absolute right-2 top-2 rounded-full bg-card p-2" aria-label="Estrela conquistada">⭐</span>}
+                {w.id === "formas" && (progress.formas?.completedLevels ?? 0) > 0 && <span className="absolute right-2 top-2 rounded-full bg-card px-2 py-1 text-foreground">{progress.formas?.completedLevels}/10</span>}
                 {!w.available && (
                   <span className="absolute right-2 top-2 rounded-full bg-card p-2 text-muted-foreground">
                     <Lock className="size-5" strokeWidth={3} />
@@ -165,6 +168,12 @@ function Game() {
           setProgress(updated);
         }} />
       )}
+      {screen === "shapes" && character && <ShapesWorld character={character} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
+        const completedLevels = Math.max(progress.formas?.completedLevels ?? 0, level + 1);
+        const updated = { ...progress, formas: { ...progress.formas, stars: completedLevels, completedLevels } };
+        saveProgress(updated);
+        setProgress(updated);
+      }} />}
     </main>
   );
 }
