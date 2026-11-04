@@ -1,6 +1,27 @@
 # As Aventuras da Helena
 
-Quero criar esse projeto PWA desse jogo.
+O **As Aventuras da Helena** é um jogo educativo e interativo desenvolvido para crianças a partir de 5 anos, com o objetivo de estimular o raciocínio lógico, a matemática básica, a memória, a criatividade e a resolução de problemas de forma lúdica e divertida.
+
+A criança será a protagonista da própria jornada, começando pela criação e personalização do seu personagem, escolhendo características físicas, roupas, calçados e acessórios.
+
+O jogo contará com diferentes mundos e desafios educativos, com níveis progressivos de dificuldade, atividades interativas, animações e recompensas.
+
+### Objetivos do projeto
+- Desenvolver habilidades matemáticas e raciocínio lógico.
+- Estimular autonomia, criatividade e concentração.
+- Proporcionar uma experiência educativa e divertida.
+- Oferecer uma interface intuitiva e adequada ao público infantil.
+
+### Tecnologias e características
+- Progressive Web App (PWA).
+- Interface responsiva, otimizada para iPad.
+- Funcionamento offline.
+- Armazenamento local do progresso.
+- Interações por toque, animações e recursos visuais.
+
+**Status:** Em desenvolvimento 🚧
+
+**Proposta:** Aprender brincando, explorar descobrindo e evoluir a cada aventura!
 
 This project was built with [Lovable](https://lovable.dev).
 
