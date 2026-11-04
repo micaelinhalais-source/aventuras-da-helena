@@ -22,7 +22,7 @@ export interface ShapeChallenge {
   options: ShapeOption[];
   correctIds: string[];
   sequence: Shape[];
-  object?: string;
+  object: string | undefined;
   fingerprint: string;
 }
 
@@ -74,7 +74,7 @@ export function createShapeChallenge(level: number, previous = "", random: () =>
     if (mode === "memory") prompt = "Qual forma você acabou de ver?";
     if (mode === "collect") {
       options = [target, other, target, candidates[2] ?? "star", target, other].map((shape, i) => ({ id: String(i), shape, color: Math.floor(random() * 4), size: 70 }));
-      prompt = `Escolha todos os ${SHAPE_NAMES[target]}s.`;
+      prompt = `Escolha todas as formas iguais ao ${SHAPE_NAMES[target]}.`;
       correctIds = ["0", "2", "4"];
     }
     options = shuffle(options, random);
