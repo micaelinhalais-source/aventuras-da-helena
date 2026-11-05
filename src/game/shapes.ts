@@ -38,7 +38,7 @@ export function createShapeChallenge(level: number, previous = "", random: () =>
     const target = candidates[0] ?? "circle";
     const other = candidates[1] ?? "square";
     let options = candidates.slice(0, 3).map((shape, i) => ({ id: String(i), shape, color: Math.floor(random() * 4), size: 70 }));
-    let prompt = `Encontre o ${SHAPE_NAMES[target]}.`;
+    let prompt = `Encontre ${target === "star" ? "a" : "o"} ${SHAPE_NAMES[target]}.`;
     let correctIds = ["0"];
     let sequence: Shape[] = [];
     let object: string | undefined;
@@ -74,7 +74,7 @@ export function createShapeChallenge(level: number, previous = "", random: () =>
     if (mode === "memory") prompt = "Qual forma você acabou de ver?";
     if (mode === "collect") {
       options = [target, other, target, candidates[2] ?? "star", target, other].map((shape, i) => ({ id: String(i), shape, color: Math.floor(random() * 4), size: 70 }));
-      prompt = `Escolha todas as formas iguais ao ${SHAPE_NAMES[target]}.`;
+      prompt = `Escolha todas as formas iguais ${target === "star" ? "à" : "ao"} ${SHAPE_NAMES[target]}.`;
       correctIds = ["0", "2", "4"];
     }
     options = shuffle(options, random);
