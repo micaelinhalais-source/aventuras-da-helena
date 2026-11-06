@@ -2,10 +2,10 @@
 export type Gender = "boy" | "girl";
 export type EyeShape = "round" | "almond" | "happy" | "big";
 export type HairStyle = "short" | "buzz" | "curly" | "afro" | "long" | "ponytail" | "pigtails" | "bun";
-export type ShirtStyle = "tshirt" | "longsleeve" | "striped" | "star" | "hoodie";
-export type BottomStyle = "shorts" | "pants" | "skirt";
-export type ShoeStyle = "sneaker" | "hightop" | "velcro";
-export type Accessory = "cap" | "bow" | "glasses" | "crown" | "headphones";
+export type ShirtStyle = "tshirt" | "longsleeve" | "striped" | "star" | "hoodie" | "explorer" | "jacket" | "cape" | "compass";
+export type BottomStyle = "shorts" | "pants" | "skirt" | "cargo" | "leggings";
+export type ShoeStyle = "sneaker" | "hightop" | "velcro" | "boots" | "hiking";
+export type Accessory = "cap" | "bow" | "glasses" | "crown" | "headphones" | "explorerhat" | "backpack" | "scarf";
 
 export interface Character {
   gender: Gender;
@@ -29,10 +29,19 @@ export const EYE_SHAPES: EyeShape[] = ["round", "big", "almond", "happy"];
 export const HAIR_COLORS = ["#2A1B12", "#5C3A1E", "#A0612B", "#E8B85A", "#C2462B", "#F06FA8", "#4A7BE0"];
 export const HAIR_STYLES: HairStyle[] = ["short", "buzz", "curly", "afro", "long", "ponytail", "pigtails", "bun"];
 export const CLOTH_COLORS = ["#FF5A5F", "#FF9F1C", "#FFD23F", "#3BCE76", "#2EC4F1", "#4D6CFA", "#A26BFA", "#FF7EB6", "#FFFFFF", "#2B2D42"];
-export const SHIRT_STYLES: ShirtStyle[] = ["tshirt", "longsleeve", "striped", "star", "hoodie"];
-export const BOTTOM_STYLES: BottomStyle[] = ["shorts", "pants", "skirt"];
-export const SHOE_STYLES: ShoeStyle[] = ["sneaker", "hightop", "velcro"];
-export const ACCESSORIES: Accessory[] = ["cap", "bow", "glasses", "crown", "headphones"];
+export const SHIRT_STYLES: ShirtStyle[] = ["tshirt", "longsleeve", "striped", "star", "hoodie", "explorer", "jacket", "cape", "compass"];
+export const BOTTOM_STYLES: BottomStyle[] = ["shorts", "pants", "skirt", "cargo", "leggings"];
+export const SHOE_STYLES: ShoeStyle[] = ["sneaker", "hightop", "velcro", "boots", "hiking"];
+export const ACCESSORIES: Accessory[] = ["cap", "bow", "glasses", "crown", "headphones", "explorerhat", "backpack", "scarf"];
+
+export const OPTION_NAMES: Record<string, string> = {
+  tshirt: "Camiseta", longsleeve: "Manga longa", striped: "Listras", star: "Estrela", hoodie: "Moletom",
+  explorer: "Colete de exploradora", jacket: "Jaqueta de aventura", cape: "Capa de heroína", compass: "Camisa de bússola",
+  shorts: "Shorts", pants: "Calça", skirt: "Saia", cargo: "Calça cargo", leggings: "Legging",
+  sneaker: "Tênis", hightop: "Tênis de cano alto", velcro: "Tênis com velcro", boots: "Botas", hiking: "Botas de trilha",
+  cap: "Boné", bow: "Laço", glasses: "Óculos", crown: "Coroa", headphones: "Fones",
+  explorerhat: "Chapéu de exploradora", backpack: "Mochila", scarf: "Lenço de aventura",
+};
 
 export const DEFAULT_BOY: Character = {
   gender: "boy",

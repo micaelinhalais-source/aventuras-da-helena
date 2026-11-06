@@ -41,6 +41,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-title-rose: var(--title-rose);
 }
 
 :root {
@@ -82,6 +83,12 @@
   --track-road: oklch(0.43 0.015 260);
   --track-marking: oklch(0.99 0.01 95);
   --track-grass: oklch(0.81 0.14 145);
+  --title-rose: oklch(0.51 0.22 352);
+  --title-highlight: oklch(0.99 0.015 350);
+  --paint-rose: oklch(0.72 0.2 352);
+  --paint-sun: oklch(0.87 0.17 88);
+  --paint-leaf: oklch(0.7 0.18 145);
+  --paint-ocean: oklch(0.66 0.16 235);
 }
 
 @layer base {
@@ -220,6 +227,23 @@
 .shape-track { background: var(--track-grass); border-radius: 2rem; }
 .track-lane { position: absolute; inset: 3rem 3rem; border: 2rem solid var(--track-road); border-radius: 6rem; }
 .track-lane::after { content: ""; position: absolute; inset: -1.1rem; border: 3px dashed var(--track-marking); border-radius: 5rem; }
+.text-title-shadow { text-shadow: 0 3px 0 var(--title-highlight), 0 6px 0 var(--accent); }
+.paint-rose { fill: var(--paint-rose); background: var(--paint-rose); }
+.paint-sun { fill: var(--paint-sun); background: var(--paint-sun); }
+.paint-leaf { fill: var(--paint-leaf); background: var(--paint-leaf); }
+.paint-ocean { fill: var(--paint-ocean); background: var(--paint-ocean); }
+.paint-empty { fill: var(--card); }
+.painting-region { stroke: var(--foreground); stroke-width: 2; cursor: pointer; }
+.painting-region:focus-visible { outline: none; stroke: var(--title-rose); stroke-width: 5; }
+.painting-stem { stroke: var(--paint-leaf); }
+.dot-line { stroke: var(--title-rose); }
+.puzzle-sky { fill: var(--sky); }
+.puzzle-preview { width: 100px; height: 100px; border: 3px solid var(--card); }
+.puzzle-part { position: absolute; width: 200%; height: 200%; pointer-events: none; }
+.puzzle-part-0 { top: 0; left: 0; }
+.puzzle-part-1 { top: 0; left: -100%; }
+.puzzle-part-2 { top: -100%; left: 0; }
+.puzzle-part-3 { top: -100%; left: -100%; }
 @media (prefers-reduced-motion: reduce) {
   .animate-float, .animate-pop, .animate-drift, .animate-spin-slow {
     animation: none;

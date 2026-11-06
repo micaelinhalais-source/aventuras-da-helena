@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Volume2, Pencil, Lock, Sparkles } from "lucide-react";
+import { Volume2, Pencil, Home, Sparkles, Play } from "lucide-react";
 import { Avatar } from "@/components/game/Avatar";
 import { Creator } from "@/components/game/Creator";
 import { Scenery } from "@/components/game/Scenery";
-import { NumbersActivity } from "@/components/game/NumbersActivity";
+import { AdventureWorld } from "@/components/game/AdventureWorld";
+import { AdventureTrack } from "@/components/game/AdventureTrack";
+import type { AdventureId } from "@/game/adventure";
 import { ShapesWorld } from "@/components/game/ShapesWorld";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_BOY, loadCharacter, saveCharacter, type Character } from "@/game/character";
@@ -16,7 +18,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "As Aventuras da Helena — Jogo educativo infantil" },
-      { name: "description", content: "Crie seu personagem e comece uma aventura de números, formas, lógica e memória." },
+      { name: "description", content: "Crie sua aventureira e explore dez mundos educativos em pistas de números, formas, inglês, palavras, pintura e quebra-cabeça." },
       { property: "og:title", content: "As Aventuras da Helena" },
       { property: "og:description", content: "Jogo educativo para crianças de 5 anos, feito para o iPad." },
       { property: "og:type", content: "website" },
@@ -26,16 +28,16 @@ export const Route = createFileRoute("/")({
   component: Game,
 });
 
-type Screen = "loading" | "welcome" | "creator" | "done" | "hub" | "numbers" | "shapes";
+type Screen = "loading" | "welcome" | "creator" | "done" | "hub" | "shapes" | AdventureId;
 
 const MSG_WELCOME = "Olá, pequeno aventureiro! Que bom ter você aqui! Antes de começarmos nossa aventura, vamos criar seu personagem?";
 const MSG_DONE = "Uau! Você ficou incrível! Nossa aventura está prestes a começar!";
 
 function SpeakButton({ text }: { text: string }) {
   return (
-    <button className="btn-round" aria-label="Ouvir" onClick={() => speak(text)}>
+    <Button variant="ghost" className="btn-round" aria-label="Ouvir" onClick={() => speak(text)}>
       <Volume2 className="size-8" strokeWidth={3} />
-    </button>
+    </Button>
   );
 }
 
@@ -54,6 +56,7 @@ function Game() {
   return (
     <main className="relative min-h-dvh overflow-hidden font-display">
       <Scenery />
+      {screen !== "loading" && screen !== "welcome" && <div className="flex justify-end px-4 pt-3"><Button variant="ghost" className="size-12 rounded-full bg-accent text-accent-foreground shadow-lg" aria-label="Tela inicial" title="Tela inicial" onClick={() => { window.speechSynthesis?.cancel(); sfx.back(); setScreen("welcome"); }}><Home className="size-6" /></Button></div>}
 
       {screen === "welcome" && (
         <section className="flex min-h-dvh flex-col items-center justify-center gap-8 p-6 text-center">
@@ -62,22 +65,23 @@ function Game() {
             alt="As Aventuras da Helena"
             className="animate-float w-60 max-w-[70vw] drop-shadow-2xl md:w-72"
           />
-          <h1 className="animate-pop text-game-shadow text-6xl font-bold text-card md:text-7xl">As Aventuras da Helena</h1>
+          <h1 className="animate-pop text-title-shadow text-4xl font-bold text-title-rose sm:text-6xl md:text-7xl">As Aventuras da Helena</h1>
           <div className="panel animate-pop flex max-w-2xl items-center gap-4 p-6 text-left [animation-delay:150ms]">
             <p className="text-2xl font-medium leading-snug md:text-3xl">
               Olá, pequeno aventureiro!{"\n"}Você está pronto pra mais uma aventura?Vamos criar seu personagem?
             </p>
             <SpeakButton text={MSG_WELCOME} />
           </div>
-          <button
-            className="btn-game animate-pop text-3xl [animation-delay:300ms]"
+          {character && <Button className="btn-game btn-game-green h-auto whitespace-normal text-2xl" onClick={() => { sfx.cheer(); setScreen("hub"); }}><Play /> CONTINUAR A AVENTURA</Button>}
+          <Button
+            className="btn-game animate-pop h-auto whitespace-normal text-2xl [animation-delay:300ms]"
             onClick={() => {
               sfx.cheer();
               setScreen("creator");
             }}
           >
             <Sparkles className="size-9" strokeWidth={3} />CRIAR PERSONAGEM
-          </button>
+          </Button>
         </section>
       )}
 
@@ -105,69 +109,37 @@ function Game() {
             <p className="text-3xl font-semibold">Uau! Você ficou incrível! 🎉</p>
             <SpeakButton text={MSG_DONE} />
           </div>
-          <button
-            className="btn-game btn-game-coral animate-pop relative text-3xl [animation-delay:400ms]"
+          <Button
+            className="btn-game btn-game-coral animate-pop relative h-auto whitespace-normal text-2xl [animation-delay:400ms]"
             onClick={() => {
               sfx.cheer();
               setScreen("hub");
             }}
           >
             🚀 COMEÇAR A AVENTURA!
-          </button>
+          </Button>
         </section>
       )}
 
       {screen === "hub" && character && (
-        <section className="flex min-h-dvh flex-col items-center gap-6 p-6 md:flex-row md:justify-center md:gap-10">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-[46vh] w-64 md:h-[60vh] md:w-80">
-              <Avatar c={character} className="animate-float h-full w-full drop-shadow-2xl" />
-            </div>
-            <button
-              className="btn-game text-2xl"
+        <section className="mx-auto flex min-h-dvh max-w-4xl flex-col items-center px-4 pb-6">
+          <h1 className="text-center text-3xl font-bold text-title-rose sm:text-4xl">As Aventuras da Helena</h1>
+          <div className="mt-4 flex items-center justify-center gap-5">
+            <Avatar c={character} className="h-32 w-20" />
+            <Button
+              className="btn-game h-auto px-5 text-xl"
               onClick={() => {
                 sfx.tab();
                 setScreen("creator");
               }}
             >
               <Pencil className="size-7" strokeWidth={3} /> Mudar visual
-            </button>
+            </Button>
           </div>
-          <div className="grid w-full max-w-xl grid-cols-2 gap-5 sm:grid-cols-3">
-            {WORLDS.map((w, i) => (
-              <Button
-                key={w.id}
-                aria-label={`Mundo ${w.name}`}
-                onClick={() => {
-                  sfx.tab();
-                  if (w.id === "numeros" && w.available) setScreen("numbers");
-                  else if (w.id === "formas" && w.available) setScreen("shapes");
-                  else speak(`Mundo ${w.name}. Em breve!`);
-                }}
-                className="animate-pop relative flex h-auto aspect-square flex-col items-center justify-center rounded-[2.5rem] border-4 border-card shadow-[0_10px_0_oklch(0_0_0/0.15)] active:translate-y-1"
-                style={{ background: `radial-gradient(circle at 35% 25%, #ffffff88, transparent 50%), ${w.color}`, animationDelay: `${i * 80}ms` }}
-              >
-                <span className="text-6xl">{w.emoji}</span>
-                <span className="mt-2 text-xl font-bold text-card [text-shadow:0_2px_0_oklch(0_0_0/0.25)]">{w.name}</span>
-                {w.id === "numeros" && (progress.numeros?.stars ?? 0) > 0 && <span className="absolute right-2 top-2 rounded-full bg-card p-2" aria-label="Estrela conquistada">⭐</span>}
-                {w.id === "formas" && (progress.formas?.completedLevels ?? 0) > 0 && <span className="absolute right-2 top-2 rounded-full bg-card px-2 py-1 text-foreground">{progress.formas?.completedLevels}/10</span>}
-                {!w.available && (
-                  <span className="absolute right-2 top-2 rounded-full bg-card p-2 text-muted-foreground">
-                    <Lock className="size-5" strokeWidth={3} />
-                  </span>
-                )}
-              </Button>
-            ))}
-          </div>
+          <AdventureTrack character={character} label="Pista dos dez mundos" stops={WORLDS.map(world => ({ id: world.id, name: `Mundo ${world.name}`, emoji: world.emoji, done: (progress[world.id]?.completedLevels ?? 0) >= 10, badge: (progress[world.id]?.completedLevels ?? 0) > 0 ? `${progress[world.id]?.completedLevels}/10` : (progress[world.id]?.stars ?? 0) > 0 ? "⭐" : undefined }))} onOpen={index => { const world = WORLDS[index]; if (!world) return; sfx.tab(); setScreen(world.id === "formas" ? "shapes" : world.id); }} />
         </section>
       )}
-      {screen === "numbers" && character && (
-        <NumbersActivity character={character} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={() => {
-          const updated = { ...progress, numeros: { stars: Math.max(1, progress.numeros?.stars ?? 0) } };
-          saveProgress(updated);
-          setProgress(updated);
-        }} />
-      )}
+      {character && WORLDS.filter(world => world.id !== "formas" && world.id === screen).map(world => <AdventureWorld key={world.id} world={{ ...world, id: world.id as AdventureId }} character={character} completed={Math.min(10, Math.max(0, progress[world.id]?.completedLevels ?? 0))} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={level => { const completedLevels = Math.max(progress[world.id]?.completedLevels ?? 0, level + 1); const updated = { ...progress, [world.id]: { ...progress[world.id], stars: Math.max(completedLevels, progress[world.id]?.stars ?? 0), completedLevels } }; saveProgress(updated); setProgress(updated); }} />)}
       {screen === "shapes" && character && <ShapesWorld character={character} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
         const completedLevels = Math.max(progress.formas?.completedLevels ?? 0, level + 1);
         const updated = { ...progress, formas: { ...progress.formas, stars: completedLevels, completedLevels } };
