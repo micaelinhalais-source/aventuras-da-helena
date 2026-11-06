@@ -2,7 +2,7 @@ import { Check, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from './Avatar';
 import type { Character } from '@/game/character';
-export interface TrackStop { id: string; name: string; emoji: string; done?: boolean; locked?: boolean; badge?: string }
+export interface TrackStop { id: string; name: string; emoji: string; done?: boolean; locked?: boolean; badge?: string | undefined }
 export function AdventureTrack({ stops, character, onOpen, label }: { stops: TrackStop[]; character: Character; onOpen: (index: number) => void; label: string }) {
   return <div className="shape-track relative mx-auto my-6 w-full max-w-2xl px-4 py-8 sm:px-10">
     <div className="track-lane" aria-hidden />
