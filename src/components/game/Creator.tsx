@@ -101,9 +101,9 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
           <Avatar c={c} className="h-full w-full drop-shadow-xl" />
         </div>
         <div className="absolute left-0 top-0 flex gap-3">
-          <button className="btn-round disabled:opacity-40" onClick={undo} disabled={!history.length} aria-label="Voltar">
+          <Button className="btn-round disabled:opacity-40" onClick={undo} disabled={!history.length} aria-label="Voltar">
             <Undo2 className="size-8" strokeWidth={3} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -111,7 +111,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
       <div className="panel flex min-h-0 flex-1 flex-col overflow-hidden p-4">
         <div className="flex gap-2 overflow-x-auto pb-3">
           {CATEGORIES.map((x) => (
-            <button
+            <Button
               key={x.id}
               onClick={() => {
                 setCat(x.id);
@@ -123,7 +123,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
             >
               <span className="text-4xl leading-none">{x.icon}</span>
               <span className="mt-1 text-sm font-semibold">{x.label}</span>
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -133,7 +133,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
               {(["boy", "girl"] as const).map((g) => {
                 const preview = g === c.gender ? c : g === "boy" ? { ...K.DEFAULT_BOY, skin: c.skin, eyeColor: c.eyeColor } : { ...K.DEFAULT_GIRL, skin: c.skin, eyeColor: c.eyeColor };
                 return (
-                  <button
+                  <Button
                     key={g}
                     onClick={() => g !== c.gender && apply(preview)}
                     className={`flex flex-col items-center rounded-3xl p-3 transition-all ${
@@ -142,7 +142,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                   >
                     <Avatar c={preview} className="h-56 w-full" />
                     <span className="text-2xl font-bold">{g === "boy" ? "Menino" : "Menina"}</span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -153,7 +153,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
               return (
                 <div key={i} className="flex flex-wrap gap-3">
                   {grp.options.map((col) => (
-                    <button
+                    <Button
                       key={col}
                       onClick={() => apply({ ...c, [grp.key]: col })}
                       aria-label="cor"
@@ -169,7 +169,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
               return (
                 <div key={i} className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                   {grp.options.map((o) => (
-                    <button
+                    <Button
                       key={o}
                       aria-label={K.OPTION_NAMES[o] ?? o}
                       title={K.OPTION_NAMES[o] ?? o}
@@ -179,7 +179,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                       }`}
                     >
                       <Avatar c={{ ...c, [grp.key]: o }} view={grp.view} className="h-full w-full" />
-                    </button>
+                    </Button>
                   ))}
                 </div>
               );
@@ -188,7 +188,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                 {grp.options.map((a) => {
                   const on = c.accessories.includes(a);
                   return (
-                    <button
+                    <Button
                       key={a}
                       aria-label={K.OPTION_NAMES[a] ?? a}
                       title={K.OPTION_NAMES[a] ?? a}
@@ -205,7 +205,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                           <Check className="size-5" strokeWidth={4} />
                         </span>
                       )}
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -213,7 +213,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
           })}
         </div>
 
-        <button
+        <Button
           className="btn-game btn-game-green mt-3 w-full"
           onClick={() => {
             sfx.cheer();
@@ -221,7 +221,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
           }}
         >
           <Check className="size-9" strokeWidth={4} /> PRONTO!
-        </button>
+        </Button>
       </div>
     </div>
   );
