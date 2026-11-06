@@ -1,5 +1,5 @@
-# Mundo Formas
-- [x] Criar pista com dez fases e progresso preservado.
-- [x] Criar dez atividades variadas com perguntas embaralhadas.
-- [x] Aplicar três corações por fase e reinício ao perdê-los.
-- [x] Testar regras e percurso completo na tela.
+# Aventura completa
+- [ ] Adicionar volta à tela inicial e título rosa sem apagar o personagem.
+- [ ] Ampliar roupas e acessórios de aventura.
+- [ ] Organizar os dez mundos em uma pista e oferecer fases jogáveis em cada mundo.
+- [ ] Testar atividades, progresso preservado e telas em tamanhos diferentes.
