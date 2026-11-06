@@ -123,7 +123,7 @@ export function Avatar({ c, view = "full", className }: { c: Character; view?: A
 
   // ---------- clothes ----------
   const torsoD = "M64 160 Q100 148 136 160 Q146 168 144 182 L140 240 Q100 248 60 240 L56 182 Q54 168 64 160Z";
-  const sleeveLen = c.shirtStyle === "longsleeve" || c.shirtStyle === "hoodie" ? 68 : 30;
+  const sleeveLen = ["longsleeve", "hoodie", "jacket"].includes(c.shirtStyle) ? 68 : 30;
   const arm = (side: 1 | -1) => {
     const x = side === -1 ? 36 : 144;
     const cx = x + 10;
@@ -141,9 +141,11 @@ export function Avatar({ c, view = "full", className }: { c: Character; view?: A
     shorts: "M58 230 L142 230 L144 278 L104 278 L100 258 L96 278 L56 278Z",
     pants: "M58 230 L142 230 L138 326 L104 326 L100 262 L96 326 L62 326Z",
     skirt: "M62 228 L138 228 L158 286 Q100 300 42 286Z",
+    cargo: "M58 230 L142 230 L138 326 L104 326 L100 262 L96 326 L62 326Z",
+    leggings: "M66 230 L134 230 L130 326 L106 326 L100 260 L94 326 L70 326Z",
   };
 
-  const shoeTop = c.shoeStyle === "hightop" ? 304 : 320;
+  const shoeTop = c.shoeStyle === "boots" ? 288 : ["hightop", "hiking"].includes(c.shoeStyle) ? 304 : 320;
   const shoeD = `M66 ${shoeTop} L96 ${shoeTop} L98 340 L56 340 Q50 340 52 334 Q56 ${shoeTop + 6} 66 ${shoeTop}Z`;
   const shoe = (d: string, flip: boolean) => {
     const dd = flip ? mirror(d) : d;
@@ -156,6 +158,7 @@ export function Avatar({ c, view = "full", className }: { c: Character; view?: A
         {c.shoeStyle === "velcro" && <rect x={Math.min(sx(62), sx(94))} y={324} width={32} height={8} rx={3} fill="#fff" opacity={0.9} />}
         {c.shoeStyle === "sneaker" && <path d={`M${sx(70)} 326 L${sx(88)} 326 M${sx(72)} 331 L${sx(90)} 331`} stroke="#fff" strokeWidth={2.5} strokeLinecap="round" />}
         {c.shoeStyle === "hightop" && <circle cx={sx(84)} cy={318} r={5} fill="#fff" />}
+        {["boots", "hiking"].includes(c.shoeStyle) && <><path d={`M${sx(70)} ${shoeTop + 3} L${sx(92)} ${shoeTop + 3}`} stroke="var(--foreground)" strokeWidth="5" /><path d={`M${sx(75)} ${shoeTop + 10} L${sx(87)} ${shoeTop + 15} M${sx(75)} ${shoeTop + 20} L${sx(87)} ${shoeTop + 25}`} stroke="var(--card)" strokeWidth="3" /></>}
       </g>
     );
   };
@@ -183,17 +186,24 @@ export function Avatar({ c, view = "full", className }: { c: Character; view?: A
 
       {hairBack}
 
+      {c.shirtStyle === "cape" && <P d="M65 156 L135 156 L174 290 Q100 314 26 290Z" fill={c.shirtColor} />}
+      {has("backpack") && <><P d="M45 170 Q35 166 32 184 L32 237 Q100 267 168 237 L168 184 Q165 166 155 170Z" fill={c.bottomColor} /><path d="M42 188 L42 228 M158 188 L158 228" stroke="var(--primary)" strokeWidth="8" /></>}
+
       {/* legs + shoes */}
       <P d={legD} fill={c.skin} glow={false} />
       <P d={mirror(legD)} fill={c.skin} glow={false} />
       {shoe(shoeD, false)}
       {shoe(shoeD, true)}
       <P d={bottoms[c.bottomStyle]} fill={c.bottomColor} />
+      {c.bottomStyle === "cargo" && <g stroke="var(--foreground)" strokeOpacity="0.35" fill="none" strokeWidth="2"><rect x="63" y="267" width="24" height="23" rx="3" /><rect x="113" y="267" width="24" height="23" rx="3" /><path d="M63 274 L87 274 M113 274 L137 274" /></g>}
 
       {/* arms + torso */}
       {arm(-1)}
       {arm(1)}
       <P d={torsoD} fill={c.shirtColor} />
+      {["explorer", "jacket"].includes(c.shirtStyle) && <><path d="M70 158 L91 169 L91 241 L60 239Z M130 158 L109 169 L109 241 L140 239Z" fill={c.bottomColor} /><path d="M100 170 L100 238" stroke="var(--card)" strokeWidth="3" /><g fill="var(--primary)" stroke="var(--foreground)" strokeWidth="1"><rect x="66" y="190" width="18" height="20" rx="2" /><rect x="116" y="190" width="18" height="20" rx="2" /></g></>}
+      {c.shirtStyle === "compass" && <g><circle cx="100" cy="201" r="21" fill="var(--card)" /><path d="M100 179 L107 201 L100 223 L93 201Z" fill="var(--secondary)" /><path d="M78 201 L100 194 L122 201 L100 208Z" fill="var(--primary)" /><circle cx="100" cy="201" r="4" fill="var(--foreground)" /></g>}
+      {has("backpack") && <path d="M65 163 L76 240 M135 163 L124 240" stroke={c.bottomColor} strokeWidth="8" />}
       {c.shirtStyle === "striped" && <rect x="40" y="150" width="120" height="100" fill={`url(#stripe-${uid})`} clipPath={`url(#torso-${uid})`} />}
       {c.shirtStyle === "star" && (
         <path d="M100 178 L106 192 L121 193 L109 202 L113 217 L100 208 L87 217 L91 202 L79 193 L94 192Z" fill="#FFD23F" stroke="#fff" strokeWidth={2} />
@@ -226,6 +236,9 @@ export function Avatar({ c, view = "full", className }: { c: Character; view?: A
       <path d="M86 124 Q100 140 114 124 Q100 130 86 124Z" fill="#B23A55" stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
 
       {hairFront}
+
+      {has("scarf") && <><path d="M82 146 Q100 161 118 146 L121 157 Q100 174 79 157Z M108 161 L128 188 L110 181 L100 163Z" fill="var(--secondary)" /><circle cx="104" cy="160" r="5" fill="var(--primary)" /></>}
+      {has("explorerhat") && <><P d="M59 59 L68 22 Q100 8 132 22 L141 59Z" fill={c.bottomColor} /><path d="M61 47 L139 47" stroke="var(--primary)" strokeWidth="9" /><P d="M33 58 Q100 43 167 58 L172 70 Q100 88 28 70Z" fill={c.bottomColor} /></>}
 
       {/* accessories */}
       {has("glasses") && (

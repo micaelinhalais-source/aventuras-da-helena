@@ -4,6 +4,7 @@ import { Avatar, type AvatarView } from "./Avatar";
 import * as K from "@/game/character";
 import type { Character, Accessory } from "@/game/character";
 import { sfx } from "@/game/sound";
+import { Button } from "@/components/ui/button";
 
 type Group =
   | { kind: "color"; key: keyof Character; options: string[] }
@@ -89,7 +90,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
     sfx.back();
   };
 
-  const category = CATEGORIES.find((x) => x.id === cat)!;
+  const category = CATEGORIES.find((x) => x.id === cat) ?? CATEGORIES[0];
 
   return (
     <div className="flex h-dvh w-full flex-col gap-4 p-4 md:flex-row md:p-6">
@@ -147,7 +148,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
             </div>
           )}
 
-          {category.groups.map((grp, i) => {
+          {category?.groups.map((grp, i) => {
             if (grp.kind === "color")
               return (
                 <div key={i} className="flex flex-wrap gap-3">
@@ -170,6 +171,8 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                   {grp.options.map((o) => (
                     <button
                       key={o}
+                      aria-label={K.OPTION_NAMES[o] ?? o}
+                      title={K.OPTION_NAMES[o] ?? o}
                       onClick={() => apply({ ...c, [grp.key]: o })}
                       className={`aspect-square rounded-3xl p-1 transition-all ${
                         c[grp.key] === o ? "scale-105 bg-primary/40 ring-4 ring-primary" : "bg-muted"
@@ -187,6 +190,8 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                   return (
                     <button
                       key={a}
+                      aria-label={K.OPTION_NAMES[a] ?? a}
+                      title={K.OPTION_NAMES[a] ?? a}
                       onClick={() =>
                         apply({ ...c, accessories: on ? c.accessories.filter((x) => x !== a) : [...c.accessories, a] })
                       }
@@ -194,7 +199,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                         on ? "scale-105 bg-primary/40 ring-4 ring-primary" : "bg-muted"
                       }`}
                     >
-                      <Avatar c={{ ...c, accessories: [a] }} view={grp.view} className="h-full w-full" />
+                       <Avatar c={{ ...c, accessories: [a] }} view={a === "backpack" || a === "scarf" ? "full" : grp.view} className="h-full w-full" />
                       {on && (
                         <span className="absolute right-1 top-1 rounded-full bg-success p-1 text-success-foreground">
                           <Check className="size-5" strokeWidth={4} />
