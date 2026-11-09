@@ -93,7 +93,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
   const category = CATEGORIES.find((x) => x.id === cat) ?? CATEGORIES[0];
 
   return (
-    <div className="flex h-dvh w-full flex-col gap-4 p-4 md:flex-row md:p-6">
+    <div className="flex h-[calc(100dvh-4rem)] w-full flex-col gap-4 p-4 md:flex-row md:p-6">
       {/* Stage */}
       <div className="relative flex min-h-0 flex-[1.1] flex-col items-center justify-center">
         <div className="absolute bottom-[6%] h-[16%] w-[70%] rounded-[50%] bg-success/70 shadow-[inset_0_-10px_0_var(--color-success-deep)]" />
@@ -101,7 +101,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
           <Avatar c={c} className="h-full w-full drop-shadow-xl" />
         </div>
         <div className="absolute left-0 top-0 flex gap-3">
-          <Button className="btn-round disabled:opacity-40" onClick={undo} disabled={!history.length} aria-label="Voltar">
+          <Button variant="ghost" className="btn-round shrink-0 disabled:opacity-40 [&_svg]:size-8" onClick={undo} disabled={!history.length} aria-label="Voltar">
             <Undo2 className="size-8" strokeWidth={3} />
           </Button>
         </div>
@@ -109,7 +109,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
 
       {/* Panel */}
       <div className="panel flex min-h-0 flex-1 flex-col overflow-hidden p-4">
-        <div className="flex gap-2 overflow-x-auto pb-3">
+        <div className="flex shrink-0 gap-2 overflow-x-auto pb-3 pt-2">
           {CATEGORIES.map((x) => (
             <Button
               key={x.id}
@@ -117,7 +117,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                 setCat(x.id);
                 sfx.tab();
               }}
-              className={`flex shrink-0 flex-col items-center rounded-2xl px-3 py-2 transition-all ${
+              className={`flex h-auto shrink-0 flex-col items-center gap-0 rounded-2xl px-3 py-2 transition-all ${
                 cat === x.id ? "scale-105 bg-primary text-primary-foreground shadow-[0_5px_0_var(--color-primary-deep)]" : "bg-muted"
               }`}
             >
@@ -136,7 +136,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                   <Button
                     key={g}
                     onClick={() => g !== c.gender && apply(preview)}
-                    className={`flex flex-col items-center rounded-3xl p-3 transition-all ${
+                    className={`flex h-auto flex-col items-center whitespace-normal rounded-3xl p-3 transition-all [&_svg]:h-56 [&_svg]:w-full ${
                       c.gender === g ? "bg-primary/40 ring-4 ring-primary" : "bg-muted"
                     }`}
                   >
@@ -174,7 +174,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                       aria-label={K.OPTION_NAMES[o] ?? o}
                       title={K.OPTION_NAMES[o] ?? o}
                       onClick={() => apply({ ...c, [grp.key]: o })}
-                      className={`aspect-square rounded-3xl p-1 transition-all ${
+                      className={`aspect-square h-auto min-w-0 rounded-3xl p-1 transition-all [&_svg]:size-full ${
                         c[grp.key] === o ? "scale-105 bg-primary/40 ring-4 ring-primary" : "bg-muted"
                       }`}
                     >
@@ -195,7 +195,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
                       onClick={() =>
                         apply({ ...c, accessories: on ? c.accessories.filter((x) => x !== a) : [...c.accessories, a] })
                       }
-                      className={`relative aspect-square rounded-3xl p-1 transition-all ${
+                      className={`relative aspect-square h-auto min-w-0 rounded-3xl p-1 transition-all [&_svg]:size-full ${
                         on ? "scale-105 bg-primary/40 ring-4 ring-primary" : "bg-muted"
                       }`}
                     >
@@ -214,7 +214,7 @@ export function Creator({ initial, onDone }: { initial: Character; onDone: (c: C
         </div>
 
         <Button
-          className="btn-game btn-game-green mt-3 w-full"
+          className="btn-game btn-game-green mt-3 h-auto w-full shrink-0"
           onClick={() => {
             sfx.cheer();
             onDone(c);
