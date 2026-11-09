@@ -133,7 +133,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
             {challenge.mode === "memory" && (remembering || reveal ? <div className="h-28 w-28"><ShapePicture shape={challenge.target} /></div> : <Button variant="outline" className="h-14 text-lg" onClick={() => { setReveal(true); window.setTimeout(() => setReveal(false), 2000); }}>Ver novamente</Button>)}
             {!["shadow", "objects", "pattern", "memory"].includes(challenge.mode) && <span className="text-6xl" aria-hidden>{info?.icon}</span>}
           </div>
-          <div className={`mx-auto grid w-full max-w-xl gap-4 ${challenge.options.length > 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-3"}`} aria-label="Opções de formas">
+          <div className={`mx-auto grid w-full max-w-3xl gap-4 sm:gap-6 ${challenge.options.length > 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-3"}`} aria-label="Opções de formas">
             {challenge.options.map((option, i) => <Button key={option.id} variant="outline" disabled={remembering || run.status !== "playing"} aria-label={`Opção ${i + 1}: ${SHAPE_NAMES[option.shape]}`} aria-pressed={selected.includes(option.id)} onClick={() => choose(option.id)} className={`relative aspect-square h-auto min-w-0 rounded-lg border-4 p-1 sm:p-3 [&_svg]:size-full ${selected.includes(option.id) ? "border-primary bg-card" : "border-card bg-card/90"}`}>
               <ShapePicture shape={option.shape} color={option.color} size={option.size} />
               {selected.includes(option.id) && multi && <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{challenge.mode === "sort" ? selected.indexOf(option.id) + 1 : <Check />}</span>}
