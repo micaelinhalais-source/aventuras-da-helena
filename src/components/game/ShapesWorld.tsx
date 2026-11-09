@@ -78,19 +78,19 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
         <Avatar c={character} className="h-28 w-20" />
         <p className="text-2xl font-bold">{completed >= 10 ? "Você chegou! 🏁" : "Vamos para a próxima fase!"}</p>
       </div>
-      <div className="shape-track relative mx-auto my-6 max-w-2xl px-5 py-8 sm:px-10">
+      <div className="shape-track relative mx-auto my-6 max-w-3xl px-3 py-10 sm:px-12">
         <div className="track-lane" aria-hidden />
-        <ol className="relative grid grid-cols-2 gap-x-8 gap-y-9 sm:gap-x-20">
+        <ol className="relative grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-24 md:gap-y-16">
           {SHAPE_LEVELS.map((item, i) => {
             const done = i < completed;
             const unlocked = i <= completed;
             const column = Math.floor(i / 2) % 2 === 0 ? i % 2 : 1 - i % 2;
             return <li key={item.mode} className={`flex flex-col items-center gap-3 text-center ${column === 0 ? "col-start-1" : "col-start-2"}`} style={{ gridRow: Math.floor(i / 2) + 1 }}>
-              <Button disabled={!unlocked} aria-label={`Fase ${i + 1}: ${item.name}`} onClick={() => open(i)} className={`relative h-24 w-24 rounded-full border-4 border-card text-4xl shadow-lg sm:h-28 sm:w-28 ${done ? "bg-success text-success-foreground" : unlocked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+              <Button disabled={!unlocked} aria-label={`Fase ${i + 1}: ${item.name}`} onClick={() => open(i)} className={`track-stop relative size-32 rounded-full border-[6px] border-card text-6xl sm:size-36 md:size-40 md:text-7xl [&_svg]:size-6 ${done ? "bg-success text-success-foreground" : unlocked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                 <span aria-hidden>{item.icon}</span>
-                <span className="absolute -bottom-3 flex h-8 min-w-8 items-center justify-center rounded-full bg-card px-2 text-lg font-bold text-foreground">{done ? <Check /> : unlocked ? i + 1 : <Lock />}</span>
+                <span className="absolute -bottom-3 flex h-10 min-w-10 items-center justify-center rounded-full bg-card px-2 text-xl shadow-md font-bold text-foreground">{done ? <Check /> : unlocked ? i + 1 : <Lock />}</span>
               </Button>
-              <span className="max-w-44 rounded-lg bg-card/95 px-2 py-1 text-lg font-semibold">{item.name}</span>
+              <span className="max-w-44 rounded-lg bg-card/95 px-3 py-1 text-xl font-bold shadow-md sm:text-2xl">{item.name}</span>
             </li>;
           })}
         </ol>
@@ -134,7 +134,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
             {!["shadow", "objects", "pattern", "memory"].includes(challenge.mode) && <span className="text-6xl" aria-hidden>{info?.icon}</span>}
           </div>
           <div className={`mx-auto grid w-full max-w-3xl gap-4 sm:gap-6 ${challenge.options.length > 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-3"}`} aria-label="Opções de formas">
-            {challenge.options.map((option, i) => <Button key={option.id} variant="outline" disabled={remembering || run.status !== "playing"} aria-label={`Opção ${i + 1}: ${SHAPE_NAMES[option.shape]}`} aria-pressed={selected.includes(option.id)} onClick={() => choose(option.id)} className={`relative aspect-square h-auto min-w-0 rounded-lg border-4 p-1 sm:p-3 [&_svg]:size-full ${selected.includes(option.id) ? "border-primary bg-card" : "border-card bg-card/90"}`}>
+            {challenge.options.map((option, i) => <Button key={option.id} variant="outline" disabled={remembering || run.status !== "playing"} aria-label={`Opção ${i + 1}: ${SHAPE_NAMES[option.shape]}`} aria-pressed={selected.includes(option.id)} onClick={() => choose(option.id)} className={`track-stop relative aspect-square h-auto min-w-0 rounded-3xl border-4 p-1 sm:p-3 [&_svg]:size-full ${selected.includes(option.id) ? "border-primary bg-card" : "border-card bg-card/90"}`}>
               <ShapePicture shape={option.shape} color={option.color} size={option.size} />
               {selected.includes(option.id) && multi && <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{challenge.mode === "sort" ? selected.indexOf(option.id) + 1 : <Check />}</span>}
             </Button>)}
