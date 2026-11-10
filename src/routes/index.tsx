@@ -140,11 +140,11 @@ function Game() {
               <Pencil className="size-7" strokeWidth={3} /> Mudar visual
             </Button>
           </div>
-          <AdventureTrack character={character} label="Pista dos dez mundos" stops={WORLDS.map(world => ({ id: world.id, name: `Mundo ${world.name}`, emoji: world.emoji, done: (progress[world.id]?.completedLevels ?? 0) >= 10, badge: (progress[world.id]?.completedLevels ?? 0) > 0 ? `${progress[world.id]?.completedLevels}/10` : (progress[world.id]?.stars ?? 0) > 0 ? "⭐" : undefined }))} onOpen={index => { const world = WORLDS[index]; if (!world) return; sfx.tab(); setScreen(world.id === "formas" ? "shapes" : world.id); }} />
+          <AdventureTrack character={character} label="Pista dos dez mundos" stops={worldMapStops(progress)} onOpen={index => { const world = WORLDS[index]; if (!world) return; sfx.tab(); setScreen(world.id === "formas" ? "shapes" : world.id); }} />
         </section>
       )}
-      {character && WORLDS.filter(world => world.id !== "formas" && world.id === screen).map(world => <AdventureWorld key={world.id} world={{ ...world, id: world.id as AdventureId }} character={character} completed={Math.min(10, Math.max(0, progress[world.id]?.completedLevels ?? 0))} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={level => { const completedLevels = Math.max(progress[world.id]?.completedLevels ?? 0, level + 1); const updated = { ...progress, [world.id]: { ...progress[world.id], stars: Math.max(completedLevels, progress[world.id]?.stars ?? 0), completedLevels } }; saveProgress(updated); setProgress(updated); }} />)}
-      {screen === "shapes" && character && <ShapesWorld character={character} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
+      {character && WORLDS.filter(world => world.id !== "formas" && world.id === screen).map(world => <AdventureWorld key={world.id} world={{ ...world, id: world.id as AdventureId }} character={character} points={totals.points} completed={Math.min(10, Math.max(0, progress[world.id]?.completedLevels ?? 0))} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={level => { const completedLevels = Math.max(progress[world.id]?.completedLevels ?? 0, level + 1); const updated = { ...progress, [world.id]: { ...progress[world.id], stars: Math.max(completedLevels, progress[world.id]?.stars ?? 0), completedLevels } }; saveProgress(updated); setProgress(updated); }} />)}
+      {screen === "shapes" && character && <ShapesWorld character={character} points={totals.points} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
         const completedLevels = Math.max(progress.formas?.completedLevels ?? 0, level + 1);
         const updated = { ...progress, formas: { ...progress.formas, stars: completedLevels, completedLevels } };
         saveProgress(updated);
