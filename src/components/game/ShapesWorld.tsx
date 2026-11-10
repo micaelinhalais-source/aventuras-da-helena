@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Heart, Lock, RotateCcw, Trophy, Volume2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, RotateCcw, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/game/Avatar";
 import { ShapePicture } from "@/components/game/ShapePicture";
 import type { Character } from "@/game/character";
 import { SHAPE_LEVELS, SHAPE_NAMES, SHAPE_ROUNDS, advanceShapeRun, applyShapeAnswer, checkShapeAnswer, createShapeChallenge, freshShapeRun } from "@/game/shapes";
 import { sfx, speak } from "@/game/sound";
+import { AdventureTrack } from './AdventureTrack';
+import { GameIndicators } from './GameIndicators';
+import { Encouragement } from './Encouragement';
+import { nextEncouragement } from '@/game/encouragement';
 
-export function ShapesWorld({ character, completed, onComplete, onBack }: { character: Character; completed: number; onComplete: (level: number) => void; onBack: () => void }) {
+export function ShapesWorld({ character, completed, points, onComplete, onBack }: { character: Character; completed: number; points: number; onComplete: (level: number) => void; onBack: () => void }) {
   const [level, setLevel] = useState<number | null>(null);
   const [challenge, setChallenge] = useState(() => createShapeChallenge(0));
   const [run, setRun] = useState(freshShapeRun);
   const [selected, setSelected] = useState<string[]>([]);
   const [feedback, setFeedback] = useState("");
+  const [celebration, setCelebration] = useState('');
   const [remembering, setRemembering] = useState(false);
   const [reveal, setReveal] = useState(false);
 
@@ -30,6 +35,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
     setRun(freshShapeRun());
     setSelected([]);
     setFeedback("");
+    setCelebration('');
     setChallenge(createShapeChallenge(index, challenge.fingerprint));
     sfx.tab();
   }
@@ -37,6 +43,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
     if (level === null) return;
     setSelected([]);
     setFeedback("");
+    setCelebration('');
     setChallenge(createShapeChallenge(level, challenge.fingerprint));
   }
   function submit(ids: string[]) {
@@ -44,7 +51,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
     const correct = checkShapeAnswer(challenge, ids);
     const updated = applyShapeAnswer(run, correct);
     setRun(updated);
-    if (correct) { setFeedback("Muito bem! 🎉"); sfx.cheer(); speak("Muito bem! Você acertou!"); }
+    if (correct) { const message = nextEncouragement(); setFeedback(''); setCelebration(message); sfx.cheer(); speak(message); }
     else {
       setSelected([]);
       setFeedback(updated.status === "lost" ? "Vamos começar esta fase de novo!" : "Quase! Vamos tentar outra vez?");
@@ -62,39 +69,19 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
   function next() {
     const updated = advanceShapeRun(run);
     setRun(updated);
-    if (updated.status === "complete" && level !== null) { onComplete(level); speak("Fase concluída! Você avançou na pista!"); }
+    if (updated.status === "complete" && level !== null) { onComplete(level); speak(celebration); }
     else newQuestion();
   }
   function backToTrack() { setLevel(null); sfx.back(); window.speechSynthesis?.cancel(); }
 
   if (level === null) return (
     <section className="mx-auto min-h-dvh max-w-5xl px-4 py-5 sm:px-8">
-      <header className="flex items-center justify-between gap-4">
+      <GameIndicators points={points} completed={completed} total={10} />
+      <header className="mt-4 flex items-center justify-between gap-4">
         <Button variant="ghost" className="h-14 w-14 rounded-full bg-card" aria-label="Voltar aos mundos" onClick={onBack}><ArrowLeft /></Button>
         <h1 className="text-center text-3xl font-bold sm:text-4xl">Pista das Formas</h1>
-        <span className="flex items-center gap-2 text-xl font-semibold"><Trophy className="text-primary-deep" />{completed}/10</span>
       </header>
-      <div className="mt-5 flex items-center justify-center gap-5">
-        <Avatar c={character} className="h-28 w-20" />
-        <p className="text-2xl font-bold">{completed >= 10 ? "Você chegou! 🏁" : "Vamos para a próxima fase!"}</p>
-      </div>
-      <div className="shape-track relative mx-auto my-6 max-w-3xl px-3 py-10 sm:px-12">
-        <div className="track-lane" aria-hidden />
-        <ol className="relative grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-24 md:gap-y-16">
-          {SHAPE_LEVELS.map((item, i) => {
-            const done = i < completed;
-            const unlocked = i <= completed;
-            const column = Math.floor(i / 2) % 2 === 0 ? i % 2 : 1 - i % 2;
-            return <li key={item.mode} className={`flex flex-col items-center gap-3 text-center ${column === 0 ? "col-start-1" : "col-start-2"}`} style={{ gridRow: Math.floor(i / 2) + 1 }}>
-              <Button disabled={!unlocked} aria-label={`Fase ${i + 1}: ${item.name}`} onClick={() => open(i)} className={`track-stop relative size-32 rounded-full border-[6px] border-card text-6xl sm:size-36 md:size-40 md:text-7xl [&_svg]:size-6 ${done ? "bg-success text-success-foreground" : unlocked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                <span aria-hidden>{item.icon}</span>
-                <span className="absolute -bottom-3 flex h-10 min-w-10 items-center justify-center rounded-full bg-card px-2 text-xl shadow-md font-bold text-foreground">{done ? <Check /> : unlocked ? i + 1 : <Lock />}</span>
-              </Button>
-              <span className="max-w-44 rounded-lg bg-card/95 px-3 py-1 text-xl font-bold shadow-md sm:text-2xl">{item.name}</span>
-            </li>;
-          })}
-        </ol>
-      </div>
+      <AdventureTrack character={character} label="Fases de Formas" stops={SHAPE_LEVELS.map((item, index) => ({ id: item.mode, name: `Fase ${index + 1}: ${item.name}`, emoji: item.icon, done: index < completed, locked: index > completed }))} onOpen={open} />
     </section>
   );
 
@@ -102,6 +89,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
   const info = SHAPE_LEVELS[level];
   return (
     <section className="mx-auto flex min-h-dvh max-w-4xl flex-col gap-5 p-4 sm:p-6">
+      <GameIndicators points={points} hearts={run.hearts} completed={completed} total={10} />
       <header className="flex items-center justify-between gap-3">
         <Button variant="ghost" className="h-14 w-14 shrink-0 rounded-full bg-card" aria-label="Voltar à pista" onClick={backToTrack}><ArrowLeft /></Button>
         <h1 className="text-center text-2xl font-bold">Fase {level + 1} · {info?.name}</h1>
@@ -109,15 +97,13 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
       </header>
       <div className="flex items-center justify-between">
         <span className="text-lg font-semibold">{run.status === "complete" ? SHAPE_ROUNDS : run.round + 1} / {SHAPE_ROUNDS}</span>
-        <div className="flex gap-2" aria-label={`${run.hearts} corações`}>
-          {[0, 1, 2].map(i => <Heart key={i} aria-hidden className={`size-8 ${i < run.hearts ? "fill-secondary text-secondary-deep" : "text-muted-foreground"}`} />)}
-        </div>
       </div>
       {run.status === "lost" || run.status === "complete" ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 py-12 text-center">
           <span className="text-7xl" aria-hidden>{run.status === "complete" ? "🏆" : "💛"}</span>
           <Avatar c={character} className="h-48 w-36" />
           <h2 className="text-3xl font-bold">{run.status === "complete" ? "Fase concluída!" : "Vamos começar esta fase de novo!"}</h2>
+          {run.status === 'complete' && <Encouragement message={celebration} />}
           {run.status === "lost" ? <Button className="btn-game h-auto whitespace-normal text-xl" onClick={() => open(level)}><RotateCcw /> Reiniciar fase</Button> : <div className="flex flex-wrap justify-center gap-4">
             {level < 9 && <Button className="btn-game h-auto text-xl" onClick={() => open(level + 1)}>Próxima fase <ArrowRight /></Button>}
             <Button variant="secondary" className="h-14 text-xl" onClick={backToTrack}>Voltar à pista</Button>
@@ -140,7 +126,7 @@ export function ShapesWorld({ character, completed, onComplete, onBack }: { char
             </Button>)}
           </div>
           <div className="flex min-h-32 flex-col items-center justify-center gap-4 text-center">
-            <p role="status" aria-live="polite" className="text-xl font-semibold">{feedback}</p>
+            {run.status === 'correct' ? <Encouragement message={celebration} /> : <p role="status" aria-live="polite" className="text-xl font-semibold">{feedback}</p>}
             {run.status === "correct" ? <Button className="btn-game btn-game-green h-auto text-xl" onClick={next}>{run.round === SHAPE_ROUNDS - 1 ? "Concluir fase" : "Próxima"}<ArrowRight /></Button> : multi && <Button disabled={selected.length === 0 || (challenge.mode === "sort" && selected.length < 3)} className="btn-game h-auto text-xl" onClick={() => submit(selected)}><Check /> Conferir</Button>}
           </div>
         </>

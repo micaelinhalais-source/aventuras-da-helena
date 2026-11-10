@@ -3,3 +3,8 @@
 - [x] Ampliar roupas e acessórios de aventura.
 - [x] Organizar os dez mundos em uma pista e oferecer fases jogáveis em cada mundo.
 - [x] Testar atividades, progresso preservado e telas em tamanhos diferentes.
+
+## Mapa e mensagens de incentivo
+- [x] Aplicar mapa ilustrado compartilhado e indicadores aos dez mundos, preservando dados e atividades.
+- [x] Adicionar mensagens variadas narradas com estrelas e confetes.
+- [x] Verificar progressão, vidas, comemorações e telas de celular e iPad.

@@ -15,4 +15,5 @@
 - Offline: vite-plugin-pwa generateSW (`/sw.js`), registered only via `src/lib/pwa.ts` guards (never in dev/preview).
 - World activities are isolated game components backed by browser-safe domain helpers; completion updates the existing progress store without touching the character.
 - Shapes level definitions, randomized challenges and life transitions live in a pure domain module so progression rules can be tested independently of rendering.
-- The shared adventure track presents worlds and non-shape phases; browser-safe adventure helpers generate questions and validate creative activities, reusing the tested three-heart phase transitions.
+- The shared illustrated AdventureTrack presents worlds and all phases; map helpers derive locks and totals from existing progress while retaining access to legacy played worlds, avoiding save migrations.
+- Encouragement selection is shared across worlds in session memory and excludes the previous message; celebrations use existing speech and CSS animations so they work offline without another storage system.

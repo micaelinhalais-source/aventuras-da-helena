@@ -13,6 +13,8 @@ import { DEFAULT_BOY, loadCharacter, saveCharacter, type Character } from "@/gam
 import { WORLDS, loadProgress, saveProgress, type Progress } from "@/game/worlds";
 import { sfx, speak } from "@/game/sound";
 import helenaIcon from "@/assets/helena-icon.png.asset.json";
+import { GameIndicators } from '@/components/game/GameIndicators';
+import { adventureTotals, worldMapStops } from '@/game/map';
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,6 +47,7 @@ function Game() {
   const [screen, setScreen] = useState<Screen>("loading");
   const [character, setCharacter] = useState<Character | null>(null);
   const [progress, setProgress] = useState<Progress>({});
+  const totals = adventureTotals(progress);
 
   useEffect(() => {
     const saved = loadCharacter();
@@ -54,7 +57,7 @@ function Game() {
   }, []);
 
   return (
-    <main className="relative min-h-dvh overflow-hidden font-display">
+    <main className="relative min-h-dvh font-display">
       <Scenery />
       {screen !== "loading" && screen !== "welcome" && <div className="flex justify-end px-4 pt-3"><Button variant="ghost" className="size-12 rounded-full bg-accent text-accent-foreground shadow-lg" aria-label="Tela inicial" title="Tela inicial" onClick={() => { window.speechSynthesis?.cancel(); sfx.back(); setScreen("welcome"); }}><Home className="size-6" /></Button></div>}
 
@@ -123,6 +126,7 @@ function Game() {
 
       {screen === "hub" && character && (
         <section className="mx-auto flex min-h-dvh max-w-4xl flex-col items-center px-4 pb-6">
+          <GameIndicators points={totals.points} completed={totals.completed} total={100} />
           <h1 className="text-center text-3xl font-bold text-title-rose sm:text-4xl">As Aventuras da Helena</h1>
           <div className="mt-4 flex items-center justify-center gap-5">
             <Avatar c={character} className="h-32 w-20" />
@@ -136,11 +140,11 @@ function Game() {
               <Pencil className="size-7" strokeWidth={3} /> Mudar visual
             </Button>
           </div>
-          <AdventureTrack character={character} label="Pista dos dez mundos" stops={WORLDS.map(world => ({ id: world.id, name: `Mundo ${world.name}`, emoji: world.emoji, done: (progress[world.id]?.completedLevels ?? 0) >= 10, badge: (progress[world.id]?.completedLevels ?? 0) > 0 ? `${progress[world.id]?.completedLevels}/10` : (progress[world.id]?.stars ?? 0) > 0 ? "⭐" : undefined }))} onOpen={index => { const world = WORLDS[index]; if (!world) return; sfx.tab(); setScreen(world.id === "formas" ? "shapes" : world.id); }} />
+          <AdventureTrack character={character} label="Pista dos dez mundos" stops={worldMapStops(progress)} onOpen={index => { const world = WORLDS[index]; if (!world) return; sfx.tab(); setScreen(world.id === "formas" ? "shapes" : world.id); }} />
         </section>
       )}
-      {character && WORLDS.filter(world => world.id !== "formas" && world.id === screen).map(world => <AdventureWorld key={world.id} world={{ ...world, id: world.id as AdventureId }} character={character} completed={Math.min(10, Math.max(0, progress[world.id]?.completedLevels ?? 0))} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={level => { const completedLevels = Math.max(progress[world.id]?.completedLevels ?? 0, level + 1); const updated = { ...progress, [world.id]: { ...progress[world.id], stars: Math.max(completedLevels, progress[world.id]?.stars ?? 0), completedLevels } }; saveProgress(updated); setProgress(updated); }} />)}
-      {screen === "shapes" && character && <ShapesWorld character={character} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
+      {character && WORLDS.filter(world => world.id !== "formas" && world.id === screen).map(world => <AdventureWorld key={world.id} world={{ ...world, id: world.id as AdventureId }} character={character} points={totals.points} completed={Math.min(10, Math.max(0, progress[world.id]?.completedLevels ?? 0))} onBack={() => { sfx.back(); setScreen("hub"); }} onComplete={level => { const completedLevels = Math.max(progress[world.id]?.completedLevels ?? 0, level + 1); const updated = { ...progress, [world.id]: { ...progress[world.id], stars: Math.max(completedLevels, progress[world.id]?.stars ?? 0), completedLevels } }; saveProgress(updated); setProgress(updated); }} />)}
+      {screen === "shapes" && character && <ShapesWorld character={character} points={totals.points} completed={Math.min(10, Math.max(0, progress.formas?.completedLevels ?? 0))} onBack={() => setScreen("hub")} onComplete={(level) => {
         const completedLevels = Math.max(progress.formas?.completedLevels ?? 0, level + 1);
         const updated = { ...progress, formas: { ...progress.formas, stars: completedLevels, completedLevels } };
         saveProgress(updated);
