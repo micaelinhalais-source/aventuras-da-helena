@@ -5,6 +5,6 @@
 - [x] Testar atividades, progresso preservado e telas em tamanhos diferentes.
 
 ## Mapa e mensagens de incentivo
-- [ ] Aplicar mapa ilustrado compartilhado e indicadores aos dez mundos, preservando dados e atividades.
-- [ ] Adicionar mensagens variadas narradas com estrelas e confetes.
-- [ ] Verificar progressão, vidas, comemorações e telas de celular e iPad.
+- [x] Aplicar mapa ilustrado compartilhado e indicadores aos dez mundos, preservando dados e atividades.
+- [x] Adicionar mensagens variadas narradas com estrelas e confetes.
+- [x] Verificar progressão, vidas, comemorações e telas de celular e iPad.

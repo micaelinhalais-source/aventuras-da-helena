@@ -23,7 +23,7 @@ export default defineConfig({
         devOptions: { enabled: false },
         filename: "sw.js",
         workbox: {
-          globPatterns: ["**/*.{js,css,png,svg,ico,webmanifest,woff2}"],
+          globPatterns: ["**/*.{js,css,png,jpg,jpeg,svg,ico,webmanifest,woff2}"],
           navigateFallback: null,
           cleanupOutdatedCaches: true,
           clientsClaim: true,
